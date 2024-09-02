@@ -1,0 +1,34 @@
+#  docker compose file will link multiple containers together them together so they can communicate with each other
+
+version: '3.8'
+services:
+  web:
+    image: node:18  
+    working_dir: /app
+    volumes:
+      - .:/app  # mounting the current directory into the container
+    command: node index.js  # to run the application
+    ports:
+      - "80:3000"
+    environment:
+      DB_HOST: mydb
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+
+    depends_on:
+      - mydb
+
+  mydb:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # ensure init.sql is executed
+
+
+      
+
