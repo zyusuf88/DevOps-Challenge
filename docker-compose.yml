@@ -1,6 +1,6 @@
 #  docker compose file will link multiple containers together them together so they can communicate with each other
 
-version: '3.10'
+version: '3.8'
 services:
   web:
     image: node:18  
