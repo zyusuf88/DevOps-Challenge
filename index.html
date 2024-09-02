@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User List & Status Check</title>
+    <style>
+        /* Base styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Container for centering content */
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Logo Styling */
+        .logo {
+            display: block;
+            max-width: 200px;
+            margin: 0 auto 20px auto;
+        }
+
+        /* Header */
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            color: #5e42a6; /* Company purple */
+            border-bottom: 2px solid #5e42a6; /* Company purple */
+            padding-bottom: 10px;
+        }
+
+        /* Styling for the user list */
+        .users-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        /* Individual user item */
+        .users-list li {
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Hover effect for user items */
+        .users-list li:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* Button styles */
+        .button-group {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .button-group button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            background-color: #5e42a6; /* Company purple */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-group button:hover {
+            background-color: #3b2d75;
+        }
+
+        /* Status display */
+        .status-display {
+            margin-top: 30px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            display: none;
+        }
+
+        .status-display.active {
+            display: block;
+        }
+
+        .status-display.success {
+            border-color: #28a745;
+            color: #28a745;
+        }
+
+        .status-display.error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Company Logo -->
+        <img src="data:image/png;base64,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" alt="Company Logo" class="logo">
+        
+        <h1>User List & Status Check</h1>
+
+        <!-- Buttons to fetch users and check status -->
+        <div class="button-group">
+            <button onclick="fetchUsers()">Fetch Users</button>
+            <button onclick="checkStatus()">Check Status & Show Users</button>
+        </div>
+
+        <!-- User list -->
+        <ul id="users" class="users-list"></ul>
+
+        <!-- Status display -->
+        <div id="status" class="status-display"></div>
+    </div>
+
+    <script>
+        const usersList = document.getElementById('users');
+        const statusDisplay = document.getElementById('status');
+
+        // Function to fetch users
+        function fetchUsers() {
+            fetch('/api/users')
+                .then(response => response.json())
+                .then(users => {
+                    usersList.innerHTML = ''; // Clear previous list
+                    users.forEach(user => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `<strong>${user.name}</strong> <span>${user.email}</span>`;
+                        usersList.appendChild(li);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching users:', error);
+                    showStatus('Error fetching users', 'error');
+                });
+        }
+
+        // Function to check server status and show users
+        function checkStatus() {
+            fetch('/api/status')
+                .then(response => response.json())
+                .then(status => {
+                    showStatus(`Server status: ${status.status}`, 'success');
+                    fetchUsers(); // Fetch and display users after checking status
+                })
+                .catch(error => {
+                    console.error('Error checking status:', error);
+                    showStatus('Error checking status', 'error');
+                });
+        }
+
+        // Function to show status messages
+        function showStatus(message, type) {
+            statusDisplay.textContent = message;
+            statusDisplay.className = `status-display active ${type}`;
+        }
+    </script>
+</body>
+</html>
