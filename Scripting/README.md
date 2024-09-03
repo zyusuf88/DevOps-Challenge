@@ -119,4 +119,4 @@ This section presents test cases to demonstrate how the script processes differe
 
 
 
-If you want to see a python version of this script click **[HERE](https://github.com/zyusuf88/DevOps-Challenge/blob/test-branch-zy/Scripting/log-script.py)**
+If you want to see a python version of this script click **[HERE](https://github.com/zyusuf88/DevOps-Challenge/blob/main/Scripting/log-script.py)**
